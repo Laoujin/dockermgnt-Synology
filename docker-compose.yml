@@ -48,29 +48,7 @@ services:
       mainLan:
         ipv4_address: ${UNIFI_IP}
 
-############
-# HEIMDALL #
-############
-  heimdall:
-    image: linuxserver/heimdall
-    container_name: mgnt-heimdall
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${CONFIG_PATH}/heimdall:/config
-    ports:
-      - ${HEIMDALL_PORT}:80
-      - ${HEIMDALL_PORT_SSL}:443
-    expose:
-      - ${HEIMDALL_PORT}
-      - ${HEIMDALL_PORT_SSL}
-    restart: ${RESTART_POLICY}
-    labels:
-     # - ${UPDATE_ON}
-      - com.centurylinklabs.watchtower.enable=true
- 
+
 #############
 # PORTAINER #
 #############
@@ -89,45 +67,6 @@ services:
     restart: ${RESTART_POLICY}
     labels:
       #- ${UPDATE_ON}
-      - com.centurylinklabs.watchtower.enable=true
-
-##############
-# WATCHTOWER #
-##############
-  watchtower:
-    image: containrrr/watchtower
-    container_name: mgnt-watchtower
-    restart: ${RESTART_POLICY}
-    logging:
-      driver: 'json-file'
-      options:
-        max-file: '5'
-        max-size: '10m'
-    command: --interval 604800 --cleanup --debug
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-#      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_LABEL_ENABLE=${WATCHTOWER_LABEL_UPDATE}
-#      - 'WATCHTOWER_SCHEDULE=${WATCHTOWER_SCHEDULE}'
-#      - WATCHTOWER_DEBUG=true
-      - WATCHTOWER_NOTIFICATIONS=${WATCHTOWER_NOTIFICATION}
-      - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL=${WATCHTOWER_HOOK}
-      - WATCHTOWER_NOTIFICATION_SLACK_CHANNEL=${WATCHTOWER_CHANNEL}
-      - WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER=Watchtower
-      - WATCHTOWER_NOTIFICATION_SLACK_ICON_EMOJI=${WATCHTOWER_ICON}
-#      - WATCHTOWER_NOTIFICATION_EMAIL_FROM=${SMTP_FROM}
-#      - WATCHTOWER_NOTIFICATION_EMAIL_TO=${WATCHTOWER_EMAIL}
-#      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER=${SMTP_SERVER}
-#      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=${SMTP_PORT}
-#      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=${SMTP_USER}
-#      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=${SMTP_PASS}
-    volumes:
-      - ${DOCKER_SOCKET}:/var/run/docker.sock
-      - /etc/ssl/certs:/etc/ssl/certs
-    labels:
-     # - ${UPDATE_ON}
       - com.centurylinklabs.watchtower.enable=true
 
 networks:
